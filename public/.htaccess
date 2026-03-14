@@ -1,0 +1,28 @@
+<IfModule mod_rewrite.c>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+# Enable URL rewriting for clean URLs
+# If the requested file or directory does not exist, redirect all requests to index.php
+# The original request URI is passed as a query parameter 'url' to index.php_value <key> <val>
+
+# The [L] flag indicates that this is the last rule to be processed if the rule matches
+# The [QSA] flag appends any existing query string to the new query string in the rewritten URL
+</IfModule>
+<IfModule !mod_rewrite.c>
+    # If mod_rewrite is not enabled, display an error message
+    ErrorDocument 404 "URL rewriting is not enabled on this server."
+</IfModule>
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header set X-Content-Type-Options "nosniff"
+    # Enable XSS protection
+    Header set X-XSS-Protection "1; mode=block"
+    # Prevent clickjacking
+    Header set X-Frame-Options "DENY"
+    # Enforce secure connections
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>

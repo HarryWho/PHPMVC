@@ -1,0 +1,120 @@
+<?php
+defined("ROOTPATH") or exit("Access Denied!");
+
+trait Model
+{
+    use Database;
+
+    protected $limit = 10;
+    protected $offset = 0;
+    //protected $order_type = 'DESC';
+
+
+    public function findAll()
+    {
+        $query = "SELECT * FROM $this->table order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+
+        return $this->query($query);
+    }
+    public function where($data, $data_not = [])
+    {
+        $keys = array_keys($data);
+        $keys_not = array_keys($data_not);
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
+        foreach ($keys as $key) {
+            $query .= $key . ' = :' . $key . ' && ';
+            }
+        foreach ($keys_not as $key) {
+            $query .= $key . ' != :' . $key . ' && ';
+        }
+        $query = trim($query, ' && ');
+        $query .= " order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+        $data = array_merge($data, $data_not);
+        // show($query);die;
+        return $this->query($query, $data);
+    }
+
+    public function join($query, $data = [])
+    {
+        // $keys = array_keys($data);
+        // show($data);
+        return $this->query($query, $data);
+    }
+
+
+    public function first($data, $data_not = [])
+    {
+        $keys = array_keys($data);
+        $keys_not = array_keys($data_not);
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
+        foreach ($keys as $key) {
+            $query .= $key . ' = :' . $key . ' && ';
+        }
+        foreach ($keys_not as $key) {
+            $query .= $key . ' != :' . $key . ' && ';
+        }
+        $query = trim($query, ' && ');
+        $query .= " limit $this->limit offset $this->offset";
+        $data = array_merge($data, $data_not);
+
+        $result = $this->query($query, $data);
+
+        if (is_array($result) && count($result)) {
+            return $result[0];
+        }
+        return false;
+    }
+
+    public function insert($data)
+    {
+        if (!empty($this->allowedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        $keys = array_keys($data);
+        $query = "INSERT INTO $this->table (" . implode(",", $keys) . ") VALUES (:" . implode(",:", $keys) . ")";
+
+        $this->query($query, $data);
+        return true;
+    }
+
+    public function delete($id, $id_column = 'user_id')
+    {
+        $data[$id_column] = $id;
+        $query = "DELETE FROM $this->table WHERE $id_column = :$id_column";
+        // show($data[$id_column]);die;
+        $this->query($query, $data);
+        return false;
+    }
+
+    public function update($id, $data, $id_column = 'user_id')
+    {
+
+        if (!empty($this->allowedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        $keys = array_keys($data);
+
+        $query = "UPDATE $this->table SET ";
+        foreach ($keys as $key) {
+            $query .= $key . ' = :' . $key . ', ';
+        }
+
+        $query = trim($query, ', ');
+        $query .= " WHERE $id_column = :$id_column";
+        $data[$id_column] = $id;
+        // show($query);
+        // show($data);die;
+        $this->query($query, $data);
+        return false;
+    }
+}
