@@ -1,0 +1,19 @@
+<?php
+defined("ROOTPATH") or exit("Access Denied!");
+
+class Message
+{
+    use Model;
+  
+
+    protected $table = 'messages';
+    protected $order_column = 'message_id';
+    protected $order_type = 'DESC';
+    protected $allowedColumns = [
+        'message_ownerId',
+        'message_authorId',
+        'message_message',
+        'message_createdAt'
+    ];
+ 
+}
