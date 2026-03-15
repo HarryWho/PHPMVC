@@ -11,7 +11,8 @@ class Notification
     protected $order_type = 'DESC';
     protected $allowedColumns = [
         'notification_ownerId',
-        'notification_message'
+        'notification_message',
+        'notification_createdAt'
     ];
  
 }
