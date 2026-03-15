@@ -10,8 +10,9 @@ class Blog
     protected $order_column = 'blog_id';
     protected $order_type = 'DESC';
     protected $allowedColumns = [
-        'blog_author',
-        'blog_catagory',
+        'blog_pageId',
+        'blog_catagoryId',
+        'blog_authorId',
         'blog_content',
         'blog_createdAt'
     ];

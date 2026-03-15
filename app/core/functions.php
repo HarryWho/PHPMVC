@@ -15,8 +15,12 @@ function esc($str){
 #region Check for required php extensions
 function check_extensions(){
     $required_extensions = [
+        'fileinfo',
         'gd',
-        'mysqli'
+        'mbstring',
+        'exif',
+        'mysqli',
+        'pdo_mysql'
     ];
     $not_loaded = [];
     foreach($required_extensions as $ext){
