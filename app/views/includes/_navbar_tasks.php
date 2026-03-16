@@ -2,10 +2,10 @@
   <!-- Menu Toggle Button -->
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-flag-o"></i>
-    <span class="label label-danger"><?= $tasks->num_rows ?></span>
+    <span class="label label-danger"><?= empty($tasks) ? '0' : count($tasks) ?></span>
   </a>
   <ul class="dropdown-menu">
-    <li class="header">You have <?= $tasks->num_rows ?> tasks</li>
+    <li class="header">You have <?= $tasks ?> tasks</li>
     <li>
       <!-- Inner menu: contains the tasks -->
       <ul class="menu">

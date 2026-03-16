@@ -2,7 +2,7 @@
             <!-- Menu toggle button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
+              <span class="label label-warning"><?= empty($notifications) ? '0' : count($notifications) ?></span>
             </a>
             <ul class="dropdown-menu">
               <li class="header">You have 10 notifications</li>

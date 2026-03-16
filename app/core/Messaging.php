@@ -8,7 +8,7 @@ class Messaging {
             'owner_id' => 'task_id',
             'date_created' => 'task_createdAt',
             'class' => 'Task'
-            ],
+        ],
         'messages'    => [
             'include' => '../app/models/Message.php',
             'owner_id' => 'message_id',
@@ -22,11 +22,18 @@ class Messaging {
             'date_created' => 'notification_createdAt',
             'class' => 'Notification'
             ],
-        
+        'users' => [
+            'include' => '../app/models/User.php',
+
+        ]
+
     ];
 
-    public static function sqlString($type) {
-        return "SELECT * FROM $type WHERE " .self::$messageType[$type]['owner_id'] ." = :userID AND ". self::$messageType[$type]['date_created'] ." > :date_created";
+    public static function getUsers()
+    {
+        require_once self::$messageType['users']['include'];
+        $my_users = new User;
+        return $my_users->findAll();
     }
 
     public static function getMessageType($type, $data=[]) {
@@ -34,6 +41,7 @@ class Messaging {
        
         $msgClass = new self::$messageType[$type]['class'];
         $result = $msgClass->where($data);
+
         return $result;    
 
         
