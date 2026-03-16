@@ -11,7 +11,6 @@ class Controller
             $messages = Messaging::getMessageType('messages', ['message_ownerId' => $user->user_id]);
             $notifications = Messaging::getMessageType('notifications', ['notification_ownerId' => $user->user_id]);
             $adminUsers = Messaging::getUsers();
-
         }
         require_once '../app/views/includes/template_header.php';
 
