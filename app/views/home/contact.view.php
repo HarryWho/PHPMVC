@@ -1,2 +1,2 @@
-<h1><?=$data['title']?></h1>
-<p><?=$data['message']?></p>
+<h1><?= esc($data['title']) ?></h1>
+<p><?= esc($data['message']) ?></p>

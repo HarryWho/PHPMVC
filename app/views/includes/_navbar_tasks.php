@@ -15,7 +15,7 @@
               <a href="#">
                 <!-- Task title and progress text -->
                 <h3>
-                  <?= $task->task_message ?>
+                  <?= esc($task->task_message) ?>
                   <small class="pull-right">20%</small>
                 </h3>
                 <!-- The progress bar -->

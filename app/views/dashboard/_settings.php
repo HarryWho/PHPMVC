@@ -30,10 +30,10 @@
                         <tbody>
                             <?php foreach ($adminUsers as $auser) : ?>
                                 <tr>
-                                    <td><?= $auser->user_id ?></td>
-                                    <td><?= $auser->user_name ?></td>
-                                    <td><?= $auser->user_email ?></td>
-                                    <td><?= $auser->user_role ?></td>
+                                    <td><?= esc($auser->user_id) ?></td>
+                                    <td><?= esc($auser->user_name) ?></td>
+                                    <td><?= esc($auser->user_email) ?></td>
+                                    <td><?= esc($auser->user_role) ?></td>
                                     <td><?= format_date($auser->user_joinedAt) ?></td>
                                 </tr>
                             <?php endforeach; ?>

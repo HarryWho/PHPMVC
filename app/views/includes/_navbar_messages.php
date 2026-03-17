@@ -15,15 +15,15 @@
               <a href="#">
                 <div class="pull-left">
                   <!-- User Image -->
-                  <img src="<?= BASE_URL ?>/dist/img/<?= $msg->user_image ?>" class="img-circle" alt="User Image">
+                  <img src="<?= BASE_URL ?>/dist/img/<?= escAttr($msg->user_image) ?>" class="img-circle" alt="User Image">
                 </div>
                 <!-- Message title and timestamp -->
                 <h4>
-                  <?= $msg->user_name ?>
+                  <?= esc($msg->user_name) ?>
                   <small><i class="fa fa-clock-o"></i> <?= timeAgo($msg->message_createdAt) ?></small>
                 </h4>
                 <!-- The message -->
-                <p><?= $msg->message_message ?></p>
+                <p><?= esc($msg->message_message) ?></p>
               </a>
             </li>
             <!-- end message -->
