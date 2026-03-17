@@ -32,17 +32,17 @@ class Controller
             // Uses query cache to avoid duplicate queries
             $tasks = QueryCache::remember(
                 'tasks_' . $user->user_id,
-                fn() => Messaging::getMessageType('tasks', ['task_ownerId' => $user->user_id])
+                fn() => NavbarLoader::getMessageType('tasks', ['task_ownerId' => $user->user_id])
             );
 
             $messages = QueryCache::remember(
                 'messages_' . $user->user_id,
-                fn() => Messaging::getMessageType('messages', ['message_ownerId' => $user->user_id])
+                fn() => NavbarLoader::getMessageType('messages', ['message_ownerId' => $user->user_id])
             );
 
             $notifications = QueryCache::remember(
                 'notifications_' . $user->user_id,
-                fn() => Messaging::getMessageType('notifications', ['notification_ownerId' => $user->user_id])
+                fn() => NavbarLoader::getMessageType('notifications', ['notification_ownerId' => $user->user_id])
             );
 
             // Load admin data if user is admin
@@ -50,7 +50,7 @@ class Controller
             if (Auth::atLeast('admin')) {
                 $adminUsers = QueryCache::remember(
                     'admin_users',
-                    fn() => Messaging::getUsers()
+                    fn() => NavbarLoader::getUsers()
                 );
             }
 

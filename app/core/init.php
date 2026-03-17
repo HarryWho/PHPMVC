@@ -13,7 +13,7 @@ require_once 'QueryProfiler.php';
 require_once 'Validator.php';
 require_once 'Flash.php';
 require_once 'Auth.php';
-require_once 'Messaging.php';
+require_once 'NavbarLoader.php';
 require_once 'Database.php';
 require_once 'Model.php';
 require_once 'Controller.php';

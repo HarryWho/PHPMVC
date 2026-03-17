@@ -75,13 +75,13 @@ $nplusone = QueryProfiler::getNPlusOneQueries(3);
 ```php
 // Instead of looping and querying:
 foreach ($users as $user) {
-    $messages = Messaging::getMessageType('messages', ['message_ownerId' => $user->user_id]);
+    $messages = NavbarLoader::getMessageType('messages', ['message_ownerId' => $user->user_id]);
 }
 
 // Use QueryCache:
 $messages = QueryCache::remember(
     'messages_' . $user->user_id,
-    fn() => Messaging::getMessageType('messages', ['message_ownerId' => $user->user_id])
+    fn() => NavbarLoader::getMessageType('messages', ['message_ownerId' => $user->user_id])
 );
 ```
 

@@ -1,24 +1,27 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
-
-<div id="summernote"></div>
+<div class="box">
+  <div class="box-header">
+    <h3 class="box-title">
+      Leave a Note
+    </h3>
+  </div>
+  <div id="summernote"></div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 <script>
   $(document).ready(function() {
     $('#summernote').summernote({
 
-        airMode: false,
-        toolbar: [],
-        placeholder: "Leave a Meaage",
-        disableDragAndDrop: true,
-        disableResizeEditor: true
+      airMode: false,
+      toolbar: [],
+      placeholder: "Leave a Meaage",
+      disableDragAndDrop: true,
+      disableResizeEditor: true
     });
     $("#summernote").css({
       'font-size': '14pt',
       'boder-radius': '50px',
       'height': '200px'
     })
-});
-
-
-
+  });
 </script>
