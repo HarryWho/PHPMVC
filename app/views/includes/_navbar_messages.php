@@ -5,7 +5,7 @@
     <span class="label label-success"><?= empty($messages) ? '0' : count($messages) ?></span>
   </a>
   <ul class="dropdown-menu">
-    <li class="header">You have <?= count($messages) ?> messages</li>
+    <li class="header">You have <?= empty($messages) ? '0' : count($messages) ?> messages</li>
     <li>
       <!-- inner menu: contains the messages -->
       <ul class="menu">
