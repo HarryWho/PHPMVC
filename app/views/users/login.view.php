@@ -1,8 +1,8 @@
 <style>
-.error {
-  color: red;
-  margin-bottom: 10px;
-}
+  .error {
+    color: red;
+    margin-bottom: 10px;
+  }
 </style>
 <div class="login-box">
   <div class="login-logo">
@@ -13,12 +13,13 @@
     <p class="login-box-msg">Sign in to start your session</p>
 
     <form action="/users/login" method="post">
+      <?= csrfField() ?>
       <div class="form-group has-feedback">
         <input type="email" class="form-control" placeholder="Email" name="user_email" required>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="error">
-        <?= isset($data['errors']['login_error']) ? $data['errors']['login_error'] : ''; ?>
+        <?= isset($data['errors']['login_error']) ? esc($data['errors']['login_error']) : ''; ?>
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Password" name="user_password" required>
@@ -40,7 +41,7 @@
       </div>
     </form>
 
-    
+
 
     <a href="#">I forgot my password</a><br>
     <a href="/users/register" class="text-center">Register a new membership</a>
