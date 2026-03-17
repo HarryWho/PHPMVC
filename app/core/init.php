@@ -9,6 +9,7 @@ require_once 'config.php';
 require_once 'functions.php';
 require_once 'DatabaseException.php';
 require_once 'QueryCache.php';
+require_once 'Validator.php';
 require_once 'Flash.php';
 require_once 'Auth.php';
 require_once 'Messaging.php';

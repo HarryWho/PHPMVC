@@ -46,48 +46,55 @@ class Users extends Controller
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       // Validate CSRF token first
       requireCSRFToken();
-      
-      // Process form
-      $errors = validateRegistration($_POST);
-     
-      if(!empty($errors)){
+
+      // Validate input using new Validator class
+      $validator = Validator::validate($_POST)
+        ->required('user_name', 'Username')
+        ->username('user_name')
+        ->required('user_email', 'Email')
+        ->email('user_email')
+        ->required('user_password', 'Password')
+        ->password('user_password', 8)
+        ->required('confirm_password', 'Confirm Password')
+        ->matches('user_password', 'confirm_password', 'Passwords');
+
+      if ($validator->fails()) {
         $data = [
           'title' => 'Register',
           'description' => 'Create an account to access all features.',
-          'errors' => $errors,
+          'errors' => $validator->getErrors(),
           'field_values' => $_POST
         ];
         $this->view('users/register', $data);
         exit;
-      }else{
-        // Check for duplicate email
-        require_once '../app/models/User.php';
-        $user = new User();
-        
-        $existing = $user->first(['user_email' => $_POST['user_email']]);
-        if ($existing) {
-          $errors['email_error'] = 'Email already registered.';
-          $data = [
-            'title' => 'Register',
-            'description' => 'Create an account to access all features.',
-            'errors' => $errors,
-            'field_values' => $_POST
-          ];
-          $this->view('users/register', $data);
-          exit;
-        }
-        
-        // Save user to database
-        $user->insert([
-          'user_name' => $_POST['user_name'],
-          'user_email' => $_POST['user_email'],
-          'user_password' => password_hash($_POST['user_password'], PASSWORD_BCRYPT)
-          
-        ]);
-        Flash::set('success', 'Registration successful. You can now log in.');
-        redirect(BASE_URL . '/users/login');
+      }
+
+      // Check for duplicate email (database-level validation)
+      require_once '../app/models/User.php';
+      $user = new User();
+
+      $existing = $user->first(['user_email' => $_POST['user_email']]);
+      if ($existing) {
+        $validator->addError('user_email', 'Email already registered.');
+        $data = [
+          'title' => 'Register',
+          'description' => 'Create an account to access all features.',
+          'errors' => $validator->getErrors(),
+          'field_values' => $_POST
+        ];
+        $this->view('users/register', $data);
         exit;
       }
+
+      // Save user to database
+      $user->insert([
+        'user_name' => $_POST['user_name'],
+        'user_email' => $_POST['user_email'],
+        'user_password' => password_hash($_POST['user_password'], PASSWORD_BCRYPT)
+      ]);
+      Flash::set('success', 'Registration successful. You can now log in.');
+      redirect(BASE_URL . '/users/login');
+      exit;
 
     }
 
