@@ -67,10 +67,10 @@ class Auth
         if ($user) {
             // Optionally validate user still exists in database (prevents orphaned sessions)
             // Uncomment if you want to validate on every request (small performance cost)
-            // if (!self::validateUserExists($user->user_id)) {
-            //     self::logout();
-            //     return null;
-            // }
+            if (!self::validateUserExists($user->user_id)) {
+                self::logout();
+                return null;
+            }
         }
 
         return $user;
@@ -88,8 +88,8 @@ class Auth
         try {
             // Use a model to check user exists
             // This is a placeholder - implement based on your User model
-            // $user = new User();
-            // Return $user->first(['user_id' => $userId]) !== false;
+            $user = new User();
+            return $user->first(['user_id' => $userId]) !== false;
             return true; // Placeholder for now
         } catch (Exception $e) {
             logError("Error validating user existence", ['user_id' => $userId, 'error' => $e->getMessage()], 'error');

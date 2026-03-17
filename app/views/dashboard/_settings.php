@@ -47,4 +47,5 @@
 <?php else: ?>
 
 
+    You are not Authorized to view that page!
 <?php endif; ?>

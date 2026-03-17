@@ -18,7 +18,7 @@
                  </div>
                  <!-- /.tab-pane -->
                  <div class="tab-pane" id="timeline">
-                     <?php include "_timeline.php" ?>
+                     <?php include_once "_timeline.php" ?>
                  </div>
                  <!-- /.tab-pane -->
                  <?php if (Auth::atLeast('admin')): ?>
