@@ -60,14 +60,108 @@ function dd(mixed $stuff): void
 }
 
 /**
- * Escape HTML special characters for safe output
+ * Context-aware output escaping function
+ * Escapes data safely for different output contexts (HTML, attributes, JSON, URL, CSS, JS)
  * 
  * @param string $str The string to escape
- * @return string The escaped string safe for HTML
+ * @param string $context The output context (html, attr, json, url, css, js). Default: html
+ * @return string The escaped string safe for the specified context
  */
-function esc(string $str): string
+function esc(string $str, string $context = 'html'): string
 {
-    return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $context = strtolower($context);
+
+    switch ($context) {
+        case 'html':
+            // For HTML body content
+            return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        case 'attr':
+            // For HTML attributes (more aggressive escaping)
+            return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        case 'json':
+            // For JSON context - escape for JSON safety
+            return json_encode($str, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE);
+
+        case 'url':
+            // For URL context - encode for safe URL transmission
+            return rawurlencode($str);
+
+        case 'css':
+            // For CSS context - escape for CSS safety (prevent CSS injection)
+            // Remove dangerous characters and escape for CSS
+            $str = preg_replace('/[^a-z0-9\-_.]/i', '', $str);
+            return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        case 'js':
+            // For JavaScript context - escape for JS safety (prevent JS injection)
+            $str = str_replace(
+                array('\\', '"', "'", "\n", "\r", "<", ">", "&"),
+                array('\\\\', '\\"', "\\'", '\\n', '\\r', '\\x3c', '\\x3e', '\\x26'),
+                $str
+            );
+            return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        default:
+            // Default to HTML context for safety
+            return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+}
+
+/**
+ * Escape and strip HTML tags - for plain text display
+ * 
+ * @param string $str The string to sanitize
+ * @param int $length Optional maximum length to truncate to
+ * @return string Plain text safe for display
+ */
+function escText(string $str, int $length = 0): string
+{
+    $str = strip_tags($str);
+    $str = esc($str, 'html');
+
+    if ($length > 0 && strlen($str) > $length) {
+        $str = substr($str, 0, $length) . '...';
+    }
+
+    return $str;
+}
+
+/**
+ * Escape output for use in HTML attributes
+ * Shorthand for esc($str, 'attr')
+ * 
+ * @param string $str The string to escape
+ * @return string The escaped string safe for HTML attributes
+ */
+function escAttr(string $str): string
+{
+    return esc($str, 'attr');
+}
+
+/**
+ * Escape output for use in HTML javascript blocks
+ * Shorthand for esc($str, 'js')
+ * 
+ * @param string $str The string to escape
+ * @return string The escaped string safe for JavaScript
+ */
+function escJs(string $str): string
+{
+    return esc($str, 'js');
+}
+
+/**
+ * Escape output for CSS contexts
+ * Shorthand for esc($str, 'css')
+ * 
+ * @param string $str The string to escape
+ * @return string The escaped string safe for CSS
+ */
+function escCss(string $str): string
+{
+    return esc($str, 'css');
 }
 
 /**
