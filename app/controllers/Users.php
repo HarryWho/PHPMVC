@@ -3,32 +3,32 @@ defined("ROOTPATH") or exit("Access Denied!");
 
 class Users extends Controller
 {
- 
-  public function profile($id=null)
+
+  public function profile($id = null)
   {
     if (!Auth::atLeast('member')) {
       redirect(BASE_URL . '/users/login');
       exit;
     }
-    
+
     // Authorization check: User can only view their own profile unless they're admin
     if ((int)$id !== Auth::user()->user_id && !Auth::atLeast('admin')) {
       Flash::set('error', 'You do not have permission to view this profile.');
       redirect(BASE_URL);
       exit;
     }
-    
+
     require_once '../app/models/User.php';
     $userModel = new User();
 
     $user = $userModel->first(['user_id' => $id]);
-    
+
     if (!$user) {
       Flash::set('error', 'User not found.');
       redirect(BASE_URL);
       exit;
     }
-    
+
     $data = [
       'title' => 'Profile',
       'description' => 'View and edit your profile information.',
@@ -38,7 +38,7 @@ class Users extends Controller
   }
   public function register()
   {
-    if(Auth::atLeast('member')){
+    if (Auth::atLeast('member')) {
       redirect('/dashboard');
       exit;
     }
@@ -95,7 +95,6 @@ class Users extends Controller
       Flash::set('success', 'Registration successful. You can now log in.');
       redirect(BASE_URL . '/users/login');
       exit;
-
     }
 
     $data = [
@@ -107,7 +106,7 @@ class Users extends Controller
 
   public function login()
   {
-    if(Auth::atLeast('member')){
+    if (Auth::atLeast('member')) {
       redirect(BASE_URL . '/dashboard');
       exit;
     }
@@ -136,33 +135,36 @@ class Users extends Controller
       require_once '../app/models/User.php';
       $user = new User();
       $found_user = $user->get_row("SELECT * FROM `users` WHERE `user_email` = ?", [$user_email]);
-      
-      if ($found_user && password_verify($user_password, $found_user->user_password)) {
-        // Login successful - clear rate limiting and regenerate session ID
-        clearFailedAttempts();
-        Auth::regenerateSessionId();
-        $_SESSION['user'] = $found_user;
 
-        // Log successful login
-        logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
+      if ($found_user) {
+        if (password_verify($user_password, $found_user->user_password)) {
+          // Login successful - clear rate limiting and regenerate session ID
+          clearFailedAttempts();
+          Auth::regenerateSessionId();
+          $_SESSION['user'] = $found_user;
 
-        Flash::set('success', 'You have been logged in successfully.');
-        redirect(BASE_URL . '/dashboard');
+          // Log successful login
+          logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
+
+          Flash::set('success', 'You have been logged in successfully.');
+          redirect(BASE_URL . '/dashboard');
+          exit;
+        } else {
+          // Login failed - record the attempt for rate limiting
+          recordFailedAttempt();
+        logError("Failed login attempt", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'warning');
+          Flash::set('warning', 'The password is incorrect.');
+          redirect('/users/login');
         exit;
+        }
       } else {
         // Login failed - record the attempt for rate limiting
         recordFailedAttempt();
         logError("Failed login attempt", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'warning');
-        
-        $data = [
-          'title' => 'Login',
-          'description' => 'Login to access your account.',
-          'errors' => ['login_error' => 'Invalid email or password.']
-        ];
-        $this->view('users/login', $data);
+        Flash::set('warning', 'That email is not registered.');
+        redirect('/users/login');
         exit;
       }
-
     }
 
     $data = [
@@ -179,5 +181,4 @@ class Users extends Controller
     redirect(BASE_URL . '/users/login');
     exit;
   }
-
 }

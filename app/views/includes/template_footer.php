@@ -105,7 +105,7 @@
     closeButton: true,
     progressBar: true,
     newestOnTop: true,
-    positionClass: "toast-bottom-right",
+    positionClass: "toast-top-center",
     timeOut: 5000
   };
 </script>
