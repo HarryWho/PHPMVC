@@ -16,15 +16,36 @@ if (phpversion() < MIN_VERSION) {
     die("Your PHP Version must be " . MIN_VERSION . " or higher to run this app. Your current version is " . phpversion());
 }
 
-// Start session with secure settings
+// Configure secure session settings BEFORE starting session
+// These settings protect against session hijacking
+ini_set('session.use_strict_mode', 1);          // Don't accept uninitialized session IDs
+ini_set('session.use_only_cookies', 1);         // Only use cookies for sessions
+ini_set('session.cookie_httponly', 1);          // Prevent JavaScript access to session cookie
+ini_set('session.cookie_samesite', 'Strict');   // CSRF protection
+ini_set('session.gc_maxlifetime', 1800);        // 30 minute timeout
+
+// Set secure cookie flag if HTTPS
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    ini_set('session.cookie_secure', 1);        // Only send cookie over HTTPS
+}
+
+// Start session with secure configuration
 session_start();
 
-// Set secure session cookie settings if HTTPS
+// Add security headers to all responses
+header('X-Content-Type-Options: nosniff');                              // Prevent MIME sniffing
+header('X-Frame-Options: SAMEORIGIN');                                  // Prevent clickjacking
+header('X-XSS-Protection: 1; mode=block');                              // XSS protection
+header('Referrer-Policy: strict-origin-when-cross-origin');             // Control referrer info
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()'); // Restrict APIs
+
+// HSTS (HTTP Strict Transport Security) if HTTPS
 if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
-    ini_set('session.cookie_secure', 1);
-    ini_set('session.cookie_httponly', 1);
-    ini_set('session.cookie_samesite', 'Strict');
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
 }
+
+// Content Security Policy
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;");
 
 // Load the application
 $app = new App;

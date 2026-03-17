@@ -108,7 +108,21 @@ class Users extends Controller
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       // Validate CSRF token first
       requireCSRFToken();
-      
+
+      // Check rate limiting before processing credentials
+      if (isRateLimited()) {
+        $remaining = getRateLimitRemaining();
+        $minutes = ceil($remaining / 60);
+
+        $data = [
+          'title' => 'Login',
+          'description' => 'Login to access your account.',
+          'errors' => ['login_error' => "Too many failed login attempts. Please try again in $minutes minute(s)."]
+        ];
+        $this->view('users/login', $data);
+        exit;
+      }
+
       // Process form
       $user_email = $_POST['user_email'];
       $user_password = $_POST['user_password'];
@@ -117,13 +131,20 @@ class Users extends Controller
       $found_user = $user->get_row("SELECT * FROM `users` WHERE `user_email` = ?", [$user_email]);
       
       if ($found_user && password_verify($user_password, $found_user->user_password)) {
-        // Login successful
+        // Login successful - clear rate limiting and regenerate session ID
+        clearFailedAttempts();
+        Auth::regenerateSessionId();
         $_SESSION['user'] = $found_user;
+
+        // Log successful login
+        logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
+
         Flash::set('success', 'You have been logged in successfully.');
         redirect(BASE_URL . '/dashboard');
         exit;
       } else {
-        // Login failed - log the attempt
+        // Login failed - record the attempt for rate limiting
+        recordFailedAttempt();
         logError("Failed login attempt", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'warning');
         
         $data = [
@@ -147,8 +168,8 @@ class Users extends Controller
   public function logout()
   {
     Flash::set('success', 'You have been logged out successfully.');
-    unset($_SESSION['user']);
-    redirect('/users/login');
+    Auth::logout();
+    redirect(BASE_URL . '/users/login');
     exit;
   }
 

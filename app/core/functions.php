@@ -285,3 +285,179 @@ function validateRegistration(array $data): array
 
     return $errors;
 }
+
+#region Rate Limiting
+
+/**
+ * Check if an IP address is rate limited for login attempts
+ * Uses exponential backoff: 5min after 3 failures, 15min after 5, 60min after 10
+ * 
+ * @param string $ip The IP address to check (defaults to current client IP)
+ * @return bool True if rate limited, false if allowed to proceed
+ */
+function isRateLimited(string $ip = ''): bool
+{
+    if (empty($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    // Initialize rate limit tracking in session
+    if (!isset($_SESSION['_rate_limit'])) {
+        $_SESSION['_rate_limit'] = [];
+    }
+
+    $key = "login_" . hash('sha256', $ip);
+    $now = time();
+
+    // Clean up old entries (older than 1 hour)
+    foreach ($_SESSION['_rate_limit'] as $k => $data) {
+        if ($now - $data['first_attempt'] > 3600) {
+            unset($_SESSION['_rate_limit'][$k]);
+        }
+    }
+
+    // Check if this IP has exceeded rate limit
+    if (isset($_SESSION['_rate_limit'][$key])) {
+        $data = $_SESSION['_rate_limit'][$key];
+        $attempts = $data['count'];
+        $lockout_duration = $data['lockout_until'] ?? 0;
+
+        // Determine lockout period based on failure count
+        if ($attempts >= 10) {
+            $lockout_duration = 3600; // 60 minutes
+        } elseif ($attempts >= 5) {
+            $lockout_duration = 900; // 15 minutes
+        } elseif ($attempts >= 3) {
+            $lockout_duration = 300; // 5 minutes
+        }
+
+        // Check if still in lockout period
+        if ($now - $data['first_attempt'] < $lockout_duration) {
+            // Update lockout timestamp
+            $_SESSION['_rate_limit'][$key]['lockout_until'] = $now + $lockout_duration;
+            return true; // Rate limited
+        }
+
+        // Lockout period expired, reset
+        unset($_SESSION['_rate_limit'][$key]);
+    }
+
+    return false; // Not rate limited
+}
+
+/**
+ * Record a failed login attempt for an IP address
+ * 
+ * @param string $ip The IP address (defaults to current client IP)
+ * @return int The total number of failed attempts for this IP
+ */
+function recordFailedAttempt(string $ip = ''): int
+{
+    if (empty($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    // Initialize rate limit tracking in session
+    if (!isset($_SESSION['_rate_limit'])) {
+        $_SESSION['_rate_limit'] = [];
+    }
+
+    $key = "login_" . hash('sha256', $ip);
+    $now = time();
+
+    // Create or update rate limit entry
+    if (!isset($_SESSION['_rate_limit'][$key])) {
+        $_SESSION['_rate_limit'][$key] = [
+            'count' => 1,
+            'first_attempt' => $now,
+            'last_attempt' => $now,
+            'lockout_until' => 0
+        ];
+    } else {
+        $_SESSION['_rate_limit'][$key]['count']++;
+        $_SESSION['_rate_limit'][$key]['last_attempt'] = $now;
+    }
+
+    $attempts = $_SESSION['_rate_limit'][$key]['count'];
+
+    // Log the failed attempt
+    logError(
+        "Failed login attempt",
+        [
+            'ip' => $ip,
+            'attempts' => $attempts,
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
+        ],
+        'warning'
+    );
+
+    return $attempts;
+}
+
+/**
+ * Clear failed login attempts for an IP address (called on successful login)
+ * 
+ * @param string $ip The IP address (defaults to current client IP)
+ * @return void
+ */
+function clearFailedAttempts(string $ip = ''): void
+{
+    if (empty($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    if (!isset($_SESSION['_rate_limit'])) {
+        return;
+    }
+
+    $key = "login_" . hash('sha256', $ip);
+    unset($_SESSION['_rate_limit'][$key]);
+}
+
+/**
+ * Get remaining lockout time in seconds (0 if not locked out)
+ * 
+ * @param string $ip The IP address (defaults to current client IP)
+ * @return int Remaining lockout time in seconds
+ */
+function getRateLimitRemaining(string $ip = ''): int
+{
+    if (empty($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    if (!isset($_SESSION['_rate_limit'])) {
+        return 0;
+    }
+
+    $key = "login_" . hash('sha256', $ip);
+
+    if (!isset($_SESSION['_rate_limit'][$key])) {
+        return 0;
+    }
+
+    $data = $_SESSION['_rate_limit'][$key];
+    $attempts = $data['count'];
+    $now = time();
+    $first_attempt = $data['first_attempt'];
+
+    // Determine lockout duration based on attempts
+    $lockout_duration = 0;
+    if ($attempts >= 10) {
+        $lockout_duration = 3600; // 60 minutes
+    } elseif ($attempts >= 5) {
+        $lockout_duration = 900; // 15 minutes
+    } elseif ($attempts >= 3) {
+        $lockout_duration = 300; // 5 minutes
+    }
+
+    $elapsed = $now - $first_attempt;
+
+    if ($elapsed >= $lockout_duration) {
+        return 0; // Not locked out anymore
+    }
+
+    return $lockout_duration - $elapsed; // Remaining lockout time
+}
+
+#endregion
