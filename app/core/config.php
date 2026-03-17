@@ -39,6 +39,7 @@ loadEnv(__DIR__ . '/../../.env');
 define('DEBUG', $_ENV['DEBUG'] === 'true');
 define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost');
 define('MIN_VERSION', $_ENV['MIN_VERSION'] ?? '8.0');
+define('HTTPS_ENFORCE', $_ENV['HTTPS_ENFORCE'] === 'true');
 
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
 define('DB_USER', $_ENV['DB_USER'] ?? 'root');

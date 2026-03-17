@@ -16,6 +16,22 @@ if (phpversion() < MIN_VERSION) {
     die("Your PHP Version must be " . MIN_VERSION . " or higher to run this app. Your current version is " . phpversion());
 }
 
+// HTTPS Enforcement (redirect HTTP to HTTPS in production)
+// Skip in development environments or when explicitly disabled
+$https_enforce = defined('HTTPS_ENFORCE') ? HTTPS_ENFORCE : false;
+
+// Production-safe HTTPS detection (supports reverse proxies)
+$is_https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+$is_https = $is_https || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+
+if ($https_enforce && !$is_https && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Only redirect GET requests (preserve form data)
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $path = $_SERVER['REQUEST_URI'] ?? '/';
+    header('Location: https://' . $host . $path, true, 301);
+    exit;
+}
+
 // Configure secure session settings BEFORE starting session
 // These settings protect against session hijacking
 ini_set('session.use_strict_mode', 1);          // Don't accept uninitialized session IDs
