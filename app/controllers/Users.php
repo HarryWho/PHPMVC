@@ -4,6 +4,7 @@ defined("ROOTPATH") or exit("Access Denied!");
 class Users extends Controller
 {
 
+  #region User Profile
   public function profile($id = null)
   {
     if (!Auth::atLeast('member')) {
@@ -18,8 +19,8 @@ class Users extends Controller
       exit;
     }
 
-    require_once '../app/models/User.php';
-    $userModel = new User();
+
+    $userModel = self::GetRequiredUser();
 
     $user = $userModel->first(['user_id' => $id]);
 
@@ -36,6 +37,9 @@ class Users extends Controller
     ];
     $this->view('users/profile', $data);
   }
+  #endregion
+
+  #region User Register
   public function register()
   {
     if (Auth::atLeast('member')) {
@@ -70,8 +74,8 @@ class Users extends Controller
       }
 
       // Check for duplicate email (database-level validation)
-      require_once '../app/models/User.php';
-      $user = new User();
+
+      $user = self::GetRequiredUser();
 
       $existing = $user->first(['user_email' => $_POST['user_email']]);
       if ($existing) {
@@ -103,7 +107,9 @@ class Users extends Controller
     ];
     $this->view('users/register', $data);
   }
+  #endregion
 
+  #region User Login
   public function login()
   {
     if (Auth::atLeast('member')) {
@@ -132,8 +138,8 @@ class Users extends Controller
       // Process form
       $user_email = $_POST['user_email'];
       $user_password = $_POST['user_password'];
-      require_once '../app/models/User.php';
-      $user = new User();
+
+      $user = self::GetRequiredUser();
       $found_user = $user->get_row("SELECT * FROM `users` WHERE `user_email` = ?", [$user_email]);
 
       if ($found_user) {
@@ -152,10 +158,10 @@ class Users extends Controller
         } else {
           // Login failed - record the attempt for rate limiting
           recordFailedAttempt();
-        logError("Failed login attempt", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'warning');
+          logError("Failed login attempt", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'warning');
           Flash::set('warning', 'The password is incorrect.');
           redirect('/users/login');
-        exit;
+          exit;
         }
       } else {
         // Login failed - record the attempt for rate limiting
@@ -173,12 +179,50 @@ class Users extends Controller
     ];
     $this->view('users/login', $data);
   }
+  #endregion
 
+  #region User Logout
   public function logout()
   {
     Flash::set('success', 'You have been logged out successfully.');
     Auth::logout();
     redirect(BASE_URL . '/users/login');
     exit;
+  }
+  #endregion
+
+  #region User Update
+  public function update($id = null)
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $user = self::GetRequiredUser();
+      $user->update($id, ['user_role' => $_POST['user_role']]);
+      echo json_encode([
+        "success" => true,
+        "message" => "Role updated"
+      ]);
+      exit;
+    }
+  }
+
+  #endregion
+
+  public function delete($id = null)
+  {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      $user = self::GetRequiredUser();
+      $user->delete($id);
+      echo json_encode([
+        "success" => true,
+        "message" => "User Deleted"
+      ]);
+      exit;
+    }
+  }
+
+  private static function GetRequiredUser(): mixed
+  {
+    require_once '../app/models/User.php';
+    return new User;
   }
 }

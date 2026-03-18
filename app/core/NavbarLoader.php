@@ -54,12 +54,6 @@ class NavbarLoader
                 WHERE notifications.notification_ownerId = :notification_ownerId";
     }
 
-    public static function getUsers()
-    {
-        require_once self::$messageType['users']['include'];
-        $my_users = new User;
-        return $my_users->findAll();
-    }
 
     public static function getMessageType($type, $data = [])
     {

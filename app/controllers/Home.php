@@ -7,9 +7,13 @@ class Home extends Controller
     public function index($params = [])
     {
        if (!Auth::user()) {
-            header('Location: /users/login');
+            redirect('/users/login');
             exit;
+        } else {
+            redirect('/dashboard');
+            exit();
         }
+
         $data = [
             'title' => 'Home',
             'description' => 'Welcome to the home page of our application.'

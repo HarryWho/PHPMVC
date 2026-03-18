@@ -46,19 +46,12 @@ class Controller
             );
 
             // Load admin data if user is admin
-            $adminUsers = [];
-            if (Auth::atLeast('admin')) {
-                $adminUsers = QueryCache::remember(
-                    'admin_users',
-                    fn() => NavbarLoader::getUsers()
-                );
-            }
+
 
             // Make messaging data available in views
             $data['tasks'] = $tasks ?? [];
             $data['messages'] = $messages ?? [];
             $data['notifications'] = $notifications ?? [];
-            $data['adminUsers'] = $adminUsers ?? [];
 
             // For debugging: show cache stats if in debug mode
             if (DEBUG) {
