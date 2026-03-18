@@ -1,4 +1,6 @@
 <?php
+// Must be accessed via the index.php front controller
+// Other wise Exit and proceed no further
 defined("ROOTPATH") or exit("Access Denied!");
 
 class Users extends Controller
@@ -207,6 +209,7 @@ class Users extends Controller
 
   #endregion
 
+  #region User Delete
   public function delete($id = null)
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -219,10 +222,13 @@ class Users extends Controller
       exit;
     }
   }
+  #endregion
 
+  #region Require User files and return User Object
   private static function GetRequiredUser(): mixed
   {
     require_once '../app/models/User.php';
     return new User;
   }
+  #endregion
 }

@@ -90,7 +90,12 @@
                 $("#confirm_delete").on('click', () => {
                     $('#modal-default').modal('hide');
 
-                    doAjaxCall(e.target.href)
+                    let tr = e.target.parent; // find the row
+                    alert(tr);
+                    if (doAjaxCall(e.target.href)) {
+                        // after AJAX success:
+                        tr.remove();
+                    }
                 })
 
             })
@@ -98,9 +103,9 @@
 
         roles.forEach(role => {
             role.addEventListener('change', (e) => {
-               
+
                 let formData = new FormData();
-               
+
                 formData.append("user_role", e.target.value);
                 url = "/users/update/" + parseInt(e.target.parentNode.parentNode.children[0].innerText, 10)
                 doAjaxCall(url, formData)
@@ -123,8 +128,10 @@
                     console.log("Server says:", response);
                     if (response.success) {
                         alert(response.message);
+                        return response.success;
                     } else {
                         alert("Update failed: " + response.message);
+                        return false;
                     }
                 },
                 error: function(xhr, status, error) {
