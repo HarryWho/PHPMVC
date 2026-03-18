@@ -21,12 +21,12 @@
       <div class="form-group has-feedback">
         <input type="email" class="form-control" placeholder="Email" name="user_email" value="<?= isset($data['field_values']['user_email']) ? escAttr($data['field_values']['user_email']) : ''; ?>" required>
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-        <span class="error"><?= isset($data['errors']['email_error']) ? esc($data['errors']['email_error']) : ''; ?></span>
+        <span class="error"><?= isset($data['errors']['user_email_error']) ? esc($data['errors']['user_email_error']) : ''; ?></span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Password" name="user_password" required>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-        <span class="error"><?= isset($data['errors']['password_error']) ? esc($data['errors']['password_error']) : ''; ?></span>
+        <span class="error"><?= isset($data['errors']['user_password_error']) ? esc($data['errors']['user_password_error']) : ''; ?></span>
       </div>
       <div class="form-group has-feedback">
         <input type="password" class="form-control" placeholder="Retype password" name="confirm_password" required>

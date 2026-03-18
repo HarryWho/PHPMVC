@@ -44,7 +44,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/users/delete/<?= $auser->user_id ?>" return false class='delete-btn'>Delete</a>
+                                        <a href="/users/delete/<?= $auser->user_id ?>" class='delete-btn btn btn-warning' style='border-radius:50%;' return false><i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -59,14 +59,14 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Update Users</h4>
+                            <h4 class="modal-title"></h4>
                         </div>
                         <div class="modal-body">
-                            <p>Are you sure you want to delete this user &hellip;</p>
+
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                            <button type="button" id="confirm_delete" class="btn btn-primary">Save changes</button>
+                            <button type="button" class="btn btn-info pull-left" data-dismiss="modal">Close</button>
+                            <button type="button" id="confirm_delete" class="btn btn-danger">Save changes</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -85,16 +85,17 @@
         deleteBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-
+                let name = e.target.parentNode.parentNode.children[1].innerText; // find the row
+                let tr = e.target.parentNode.parentNode;
+                $("#confirm_delete").text("Delete " + name);
+                $(".modal-title").text("Deleting " + name + "?")
+                $(".modal-body").text("Are you sure you want to delete " + name + "?");
                 $('#modal-default').modal('show'); // ✅ Correct
                 $("#confirm_delete").on('click', () => {
                     $('#modal-default').modal('hide');
-
-                    let tr = e.target.parent; // find the row
-                    alert(tr);
                     if (doAjaxCall(e.target.href)) {
                         // after AJAX success:
-                        tr.remove();
+                        tr.parentNode.removeChild(tr);
                     }
                 })
 

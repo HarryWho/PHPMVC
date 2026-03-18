@@ -34,7 +34,7 @@ function loadEnv($file)
 
 // Load .env file from project root
 loadEnv(__DIR__ . '/../../.env');
-
+date_default_timezone_set('Australia/Sydney');
 // Define constants from environment variables with fallback defaults
 define('DEBUG', $_ENV['DEBUG'] === 'true');
 define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost');

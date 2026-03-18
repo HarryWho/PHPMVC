@@ -65,6 +65,8 @@ class Users extends Controller
         ->matches('user_password', 'confirm_password', 'Passwords');
 
       if ($validator->fails()) {
+        dd($validator->getErrors());
+        //die;
         $data = [
           'title' => 'Register',
           'description' => 'Create an account to access all features.',
@@ -150,7 +152,8 @@ class Users extends Controller
           clearFailedAttempts();
           Auth::regenerateSessionId();
           $_SESSION['user'] = $found_user;
-
+          $user = self::GetRequiredUser();
+          $user->update(Auth::user()->user_id, ['user_last_login' => date("Y-m-d H:i:s")]);
           // Log successful login
           logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
 
