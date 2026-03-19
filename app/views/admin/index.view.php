@@ -53,7 +53,7 @@
                 </div>
             </div>
             <!-- #region Modal -->
-            <div class="modal fade" id="modal-default">
+            <div class="modal modal-warning fade" id="modal-default">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -74,8 +74,32 @@
                 <!-- /.modal-dialog -->
             </div>
             <!-- /.modal -->
+
+            <!-- #region Modal Info -->
+            <div class="modal fade" id="modal-dialog" style="width:auto;margin:auto;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body">
+
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" id="confirm_delete" data-dismiss="modal" class="btn btn-info">OK</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
         </div><!-- ./col -->
     </div><!-- ./row -->
+    <?php include_once '../app/views/includes/_ajax.php' ?>
     <script>
         const roles = document.querySelectorAll(".roles");
         const deleteBtns = document.querySelectorAll('.delete-btn');
@@ -87,15 +111,27 @@
                 e.preventDefault();
                 let name = e.target.parentNode.parentNode.children[1].innerText; // find the row
                 let tr = e.target.parentNode.parentNode;
+                let user_id = <?= Auth::user()->user_id ?>;
                 $("#confirm_delete").text("Delete " + name);
-                $(".modal-title").text("Deleting " + name + "?")
-                $(".modal-body").text("Are you sure you want to delete " + name + "?");
+                $("#modal-default .modal-title").text("Deleting " + name + "?");
+                $("#modal-default .modal-body").text("Are you sure you want to delete " + name + "?");
+                $("#confirm_delete").prop(
+                    'disabled', false
+                );
+                if (user_id === parseInt(tr.children[0].innerText)) {
+                    $("#confirm_delete").prop(
+                        'disabled', true
+                    );
+                    $("#modal-default .modal-body").text("You cannot delete yourself")
+                    $("#modal-default .modal-title").text("Deleting Yourself?... You cannot do that");
+                }
+
                 $('#modal-default').modal('show'); // ✅ Correct
                 $("#confirm_delete").on('click', () => {
                     $('#modal-default').modal('hide');
                     if (doAjaxCall(e.target.href)) {
                         // after AJAX success:
-                        tr.parentNode.removeChild(tr);
+                        tr.parentNode.removeChildNode(tr);
                     }
                 })
 
@@ -116,29 +152,12 @@
             })
         })
 
-        function doAjaxCall(p_url, formData = null) {
-            alert(p_url)
-            $.ajax({
-                url: p_url,
-                type: "POST",
-                data: formData,
-                processData: false, // required
-                contentType: false, // required
-                dataType: "json",
-                success: function(response) {
-                    console.log("Server says:", response);
-                    if (response.success) {
-                        alert(response.message);
-                        return response.success;
-                    } else {
-                        alert("Update failed: " + response.message);
-                        return false;
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error:", error);
-                }
-            });
+        function showModal(response, type) {
+
+            $("#modal-dialog .modal-title").text(response.message);
+            $("#modal-dialog .modal-body").text(response.messageBody);
+            $("#modal-dialog").addClass(type);
+            $('#modal-dialog').modal('show'); // ✅ Correct
         }
     </script>
 <?php else: ?>

@@ -204,7 +204,8 @@ class Users extends Controller
       $user->update($id, ['user_role' => $_POST['user_role']]);
       echo json_encode([
         "success" => true,
-        "message" => "Role updated"
+        "message" => "Role updated",
+        'messageBody' => "You have successfully updated the User"
       ]);
       exit;
     }
@@ -220,7 +221,8 @@ class Users extends Controller
       $user->delete($id);
       echo json_encode([
         "success" => true,
-        "message" => "User Deleted"
+        "message" => "User Deleted",
+        "messageBody" => "You successfully deleted the User"
       ]);
       exit;
     }

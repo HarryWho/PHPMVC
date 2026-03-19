@@ -1,8 +1,3 @@
-<?php
-if (Auth::atLeast('member')) {
-    include_once  '../app/views/includes/summernote.php';
-}
-?>
 <!-- Post -->
 <div class="post">
     <div class="user-block">

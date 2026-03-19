@@ -12,7 +12,7 @@ class Catagory
     protected $allowedColumns = [
    
         'catagory_authorId',
-        'catagory_name',
+        'catagory_title',
         'catagory_description'
     ];
  
