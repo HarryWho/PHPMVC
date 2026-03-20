@@ -255,23 +255,23 @@ function timeAgo(string $datetime): string
     $diff = $now->diff($ago);
 
     if ($diff->y > 0) {
-        return $diff->y . " year" . ($diff->y > 1 ? "s" : "") . " ago";
+        return $diff->y . " yr" . ($diff->y > 1 ? "`s" : "") . " ago";
     }
     if ($diff->m > 0) {
-        return $diff->m . " month" . ($diff->m > 1 ? "s" : "") . " ago";
+        return $diff->m . " mth" . ($diff->m > 1 ? "`s" : "") . " ago";
     }
     if ($diff->d >= 7) {
         $weeks = floor($diff->d / 7);
-        return $weeks . " week" . ($weeks > 1 ? "s" : "") . " ago";
+        return $weeks . " wk" . ($weeks > 1 ? "`s" : "") . " ago";
     }
     if ($diff->d > 0) {
-        return $diff->d . " day" . ($diff->d > 1 ? "s" : "") . " ago";
+        return $diff->d . " dy" . ($diff->d > 1 ? "`s" : "") . " ago";
     }
     if ($diff->h > 0) {
-        return $diff->h . " hour" . ($diff->h > 1 ? "s" : "") . " ago";
+        return $diff->h . " hr" . ($diff->h > 1 ? "`s" : "") . " ago";
     }
     if ($diff->i > 0) {
-        return $diff->i . " minute" . ($diff->i > 1 ? "s" : "") . " ago";
+        return $diff->i . " min" . ($diff->i > 1 ? "`s" : "") . " ago";
     }
     return "just now";
 }

@@ -2,15 +2,15 @@
   <!-- Menu Toggle Button -->
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-flag-o"></i>
-    <span class="label label-danger"><?= empty($tasks) ? '0' : count($tasks) ?></span>
+    <span class="label label-danger"><?= empty($data['tasks']) ? '0' : count($data['tasks']) ?></span>
   </a>
   <ul class="dropdown-menu">
     <li class="header">You have <?= $tasks ?> tasks</li>
     <li>
       <!-- Inner menu: contains the tasks -->
       <ul class="menu">
-        <?php if (!empty($tasks)): ?>
-          <?php foreach ($tasks as $task): ?>
+        <?php if (!empty($data['tasks'])): ?>
+          <?php foreach ($data['tasks'] as $task): ?>
             <li><!-- Task item -->
               <a href="#">
                 <!-- Task title and progress text -->

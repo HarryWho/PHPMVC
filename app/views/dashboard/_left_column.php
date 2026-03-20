@@ -19,6 +19,8 @@
                     </li>
                 <?php endforeach; ?>
             </ul>
+        <?php else: ?>
+            <p>There are no Catagories Listed</p>
         <?php endif; ?>
 
     </div>
@@ -28,14 +30,35 @@
 </div>
 <!-- /.box -->
 
-<!-- About Me Box -->
+<!-- Groups i belong to -->
 <div class="box box-primary">
     <div class="box-header with-border">
-        <h3 class="box-title">About Me</h3>
+        <h3 class="box-title">Pages i have Joined </h3>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
+        <?php if (!empty($data['groups-i-am-in'])): ?>
+        <?php else: ?>
+            <!-- TODO -->
+            <p>You do not belong to any groups</p>
+        <?php endif; ?>
+    </div>
+    <!-- /.box-body -->
+</div>
+<!-- /.box -->
 
+<!-- Groups i belong to -->
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">My Pages</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <?php if (!empty($data['my-pages'])): ?>
+        <?php else: ?>
+            <!-- TODO Create One-->
+            <p>You have No pages</p>
+        <?php endif; ?>
     </div>
     <!-- /.box-body -->
 </div>

@@ -38,6 +38,10 @@ class NavbarLoader
                 INNER JOIN users on messages.message_authorId = users.user_id
                 WHERE messages.message_ownerId = :message_ownerId";
     }
+    private static function setMessagesSQL($cls, $data = []): bool
+    {
+        return  $cls->insert($data);
+    }
 
     private static function getTaskSQL(): string
     {
@@ -47,15 +51,26 @@ class NavbarLoader
                 WHERE tasks.task_ownerId = :task_ownerId";
     }
 
-    private static function getNotificationSQL(): string
+    private static function setTaskSQL($cls, $data = []): bool
     {
+        return  $cls->insert($data);
+    }
+    private static function getNotificationSQL($cls): string
+    {
+
         return  "SELECT *
                 FROM notifications
-                WHERE notifications.notification_ownerId = :notification_ownerId";
+                WHERE notifications.notification_ownerId = :notification_ownerId
+                OR notifications.notification_ownerId = :notify_everyone
+                ORDER BY " . $cls->OrderColumn() . " " . $cls->OrderType() . " LIMIT " . $cls->Limit() . " OFFSET " . $cls->Offset();
     }
 
+    private static function setNotificationSQL($cls, $data): bool
+    {
+        return  $cls->insert($data);
+    }
 
-    public static function getMessageType($type, $data = [])
+    public static function getMessageType($type, $data = []): array|false
     {
         require_once self::$messageType[$type]['include'];
 
@@ -69,12 +84,34 @@ class NavbarLoader
                 $sql = self::getMessagesSQL();
                 break;
             case "notifications":
-                $sql = self::getNotificationSQL();
+                $sql = self::getNotificationSQL($msgClass);
                 break;
         }
 
         $result = $msgClass->join($sql, $data);
 
         return $result;
+    }
+
+    public static function setMessageType($type, $data = []): bool
+    {
+        require_once self::$messageType[$type]['include'];
+
+        $cls = new self::$messageType[$type]['class'];
+
+        switch ($type) {
+            case "tasks":
+                return self::setTaskSQL($cls, $data);
+                break;
+            case "messages":
+                return self::setMessagesSQL($cls, $data);
+                break;
+            case "notifications":
+                return self::setNotificationSQL($cls, $data);
+                break;
+            default:
+                return false;
+        }
+        return false;
     }
 }

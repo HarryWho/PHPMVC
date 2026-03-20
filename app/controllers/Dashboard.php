@@ -8,12 +8,16 @@ class Dashboard extends Controller
   {
     require_once '../app/core/DashboardLoader.php';
     if(Auth::atLeast('member')) {
+      $catagories = QueryCache::remember(
+        'catagories_' . Auth::user()->user_id,
+        fn() => DashboardLoader::loadDashboardFunction('catagories')
+      );
       $data = [
         'title' => 'Dashboard',
         'description' => 'Welcome to your dashboard.',
-        'catagories' => DashboardLoader::loadDashboardFunction('catagories'), // contect the catagories database
+        'catagories' => $catagories, // contect the catagories database
         'groups-i-am-in' => '', // contact database for groups i am in 
-        'pages-i-own' => ''
+        'my-pages' => ''
 
       ];
       $this->view('dashboard/index', $data);
@@ -23,4 +27,5 @@ class Dashboard extends Controller
       exit;
     }
   }
+  public function SetNotification(): void {}
 }

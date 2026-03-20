@@ -1,114 +1,53 @@
-<!-- Post -->
-<div class="post">
-    <div class="user-block">
-        <img class="img-circle img-bordered-sm" src="../../dist/img/user1-128x128.jpg" alt="user image">
-        <span class="username">
-            <a href="#">Jonathan Burke Jr.</a>
-            <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-        </span>
-        <span class="description">Shared publicly - 7:30 PM today</span>
-    </div>
-    <!-- /.user-block -->
-    <p>
-        Lorem ipsum represents a long-held tradition for designers,
-        typographers and the like. Some people hate it and argue for
-        its demise, but others ignore the hate as they create awesome
-        tools to help create filler text for everyone from bacon lovers
-        to Charlie Sheen fans.
-    </p>
-    <ul class="list-inline">
-        <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-        <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-        </li>
-        <li class="pull-right">
-            <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                (5)</a>
-        </li>
-    </ul>
+<div class="row">
+    <?php if (!empty($data['catagories'])): ?>
+        <?php foreach ($data['catagories'] as $cat): ?>
+            <div class="col-md-6">
+                <!-- Widget: user widget style 1 -->
+                <div class="box box-widget widget-user">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-black" style="background: url('../dist/img/photo1.png') center center;">
+                        <h3 class="widget-user-username"><?= $cat->user_name ?></h3>
+                        <h5 class="widget-user-desc"><?= $cat->catagory_title ?></h5>
+                    </div>
+                    <div class="widget-user-image">
+                        <img class="img-circle" src="<?= BASE_URL ?>/dist/img/<?= $cat->user_image ?>" alt="User Avatar">
+                    </div>
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
+                                    <!--<h5 class="description-header"><? ?></h5>
+                                    <span class="description-text">Followers</span>-->
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4 border-right">
+                                <div class="description-block">
 
-    <input class="form-control input-sm" type="text" placeholder="Type a comment">
-</div>
-<!-- /.post -->
-
-<!-- Post -->
-<div class="post clearfix">
-    <div class="user-block">
-        <img class="img-circle img-bordered-sm" src="../../dist/img/user7-128x128.jpg" alt="User Image">
-        <span class="username">
-            <a href="#">Sarah Ross</a>
-            <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-        </span>
-        <span class="description">Sent you a message - 3 days ago</span>
-    </div>
-    <!-- /.user-block -->
-    <p>
-        Lorem ipsum represents a long-held tradition for designers,
-        typographers and the like. Some people hate it and argue for
-        its demise, but others ignore the hate as they create awesome
-        tools to help create filler text for everyone from bacon lovers
-        to Charlie Sheen fans.
-    </p>
-
-    <form class="form-horizontal">
-        <div class="form-group margin-bottom-none">
-            <div class="col-sm-9">
-                <input class="form-control input-sm" placeholder="Response">
-            </div>
-            <div class="col-sm-3">
-                <button type="submit" class="btn btn-danger pull-right btn-block btn-sm">Send</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!-- /.post -->
-
-<!-- Post -->
-<div class="post">
-    <div class="user-block">
-        <img class="img-circle img-bordered-sm" src="../../dist/img/user6-128x128.jpg" alt="User Image">
-        <span class="username">
-            <a href="#">Adam Jones</a>
-            <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
-        </span>
-        <span class="description">Posted 5 photos - 5 days ago</span>
-    </div>
-    <!-- /.user-block -->
-    <div class="row margin-bottom">
-        <div class="col-sm-6">
-            <img class="img-responsive" src="../../dist/img/photo1.png" alt="Photo">
-        </div>
-        <!-- /.col -->
-        <div class="col-sm-6">
-            <div class="row">
-                <div class="col-sm-6">
-                    <img class="img-responsive" src="../../dist/img/photo2.png" alt="Photo">
-                    <br>
-                    <img class="img-responsive" src="../../dist/img/photo3.jpg" alt="Photo">
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-4">
+                                <div class="description-block">
+                                    <h5 class="description-header">0</h5>
+                                    <span class="description-text">Rooms</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <div class="row">
+                            <div class="col">
+                                <?= $cat->catagory_description ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- /.col -->
-                <div class="col-sm-6">
-                    <img class="img-responsive" src="../../dist/img/photo4.jpg" alt="Photo">
-                    <br>
-                    <img class="img-responsive" src="../../dist/img/photo1.png" alt="Photo">
-                </div>
-                <!-- /.col -->
+                <!-- /.widget-user -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.col -->
-    </div>
-    <!-- /.row -->
-
-    <ul class="list-inline">
-        <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
-        <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
-        </li>
-        <li class="pull-right">
-            <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
-                (5)</a>
-        </li>
-    </ul>
-
-    <input class="form-control input-sm" type="text" placeholder="Type a comment">
+        <?php endforeach ?>
+    <?php endif ?>
 </div>
-<!-- /.post -->

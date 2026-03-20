@@ -154,6 +154,8 @@ class Users extends Controller
           $_SESSION['user'] = $found_user;
           $user = self::GetRequiredUser();
           $user->update(Auth::user()->user_id, ['user_last_login' => date("Y-m-d H:i:s")]);
+          // Send Notification
+          NavbarLoader::setMessageType('notifications', ['notification_ownerId' => '30', 'notification_message' => "Test message for Harry Only"]);
           // Log successful login
           logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
 

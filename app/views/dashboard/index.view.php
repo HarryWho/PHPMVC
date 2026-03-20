@@ -7,23 +7,14 @@
          <div class="nav-tabs-custom">
              <ul class="nav nav-tabs">
                  <li class="active"><a href="#activity" data-toggle="tab">Activity</a></li>
-                 <!--<li><a href="#timeline" data-toggle="tab">Timeline</a></li>-->
              </ul>
              <div class="tab-content">
                  <div class="active tab-pane" id="activity">
-                     <?php
-                        if (Auth::atLeast('member')) {
-                            include_once  '../app/views/includes/summernote.php';
-                        }
-                        ?>
+
                      <?php include_once "_activity.php" ?>
                  </div>
                  <!-- /.tab-pane -->
-                 <!-- <div class="tab-pane" id="timeline">
-                     <?php //include_once "_timeline.php" 
-                        ?>
-                 </div>-->
-                 <!-- /.tab-pane -->
+
              </div>
              <!-- /.tab-content -->
          </div>

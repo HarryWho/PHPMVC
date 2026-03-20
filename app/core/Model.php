@@ -10,8 +10,7 @@ trait Model
 {
     use Database;
 
-    protected int $limit = 10;
-    protected int $offset = 0;
+
 
     /**
      * Escape SQL identifiers (table and column names)
@@ -74,6 +73,8 @@ trait Model
     public function findAll(): array|false
     {
         $order = $this->getOrderClause();
+        dd($order);
+        die();
         $table = $this->getTableName();
 
         $query = "SELECT * FROM " . $table . " ORDER BY " . $order['column'] . " " . $order['type'] . " LIMIT " . $this->limit . " OFFSET " . $this->offset;

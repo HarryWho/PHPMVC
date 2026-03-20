@@ -2,15 +2,15 @@
   <!-- Menu toggle button -->
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-envelope-o"></i>
-    <span class="label label-success"><?= empty($messages) ? '0' : count($messages) ?></span>
+    <span class="label label-success"><?= empty($data['messages']) ? '0' : count($data['messages']) ?></span>
   </a>
   <ul class="dropdown-menu">
-    <li class="header">You have <?= empty($messages) ? '0' : count($messages) ?> messages</li>
+    <li class="header">You have <?= empty($data['messages']) ? '0' : count($data['messages']) ?> messages</li>
     <li>
       <!-- inner menu: contains the messages -->
       <ul class="menu">
-        <?php if (!empty($messages)) : ?>
-          <?php foreach ($messages as $msg): ?>
+        <?php if (!empty($data['messages'])) : ?>
+          <?php foreach ($data['messages'] as $msg): ?>
             <li><!-- start message -->
               <a href="#">
                 <div class="pull-left">

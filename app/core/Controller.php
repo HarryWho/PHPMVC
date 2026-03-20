@@ -26,23 +26,23 @@ class Controller
     protected function view(string $view, array $data = []): void
     {
         if (isLoggedIn()) {
-            $user = Auth::user();
+
 
             // Load messaging data for the current user
             // Uses query cache to avoid duplicate queries
             $tasks = QueryCache::remember(
-                'tasks_' . $user->user_id,
-                fn() => NavbarLoader::getMessageType('tasks', ['task_ownerId' => $user->user_id])
+                'tasks_' . Auth::user()->user_id,
+                fn() => NavbarLoader::getMessageType('tasks', ['task_ownerId' => Auth::user()->user_id])
             );
 
             $messages = QueryCache::remember(
-                'messages_' . $user->user_id,
-                fn() => NavbarLoader::getMessageType('messages', ['message_ownerId' => $user->user_id])
+                'messages_' . Auth::user()->user_id,
+                fn() => NavbarLoader::getMessageType('messages', ['message_ownerId' => Auth::user()->user_id])
             );
 
             $notifications = QueryCache::remember(
-                'notifications_' . $user->user_id,
-                fn() => NavbarLoader::getMessageType('notifications', ['notification_ownerId' => $user->user_id])
+                'notifications_' . Auth::user()->user_id,
+                fn() => NavbarLoader::getMessageType('notifications', ['notification_ownerId' => Auth::user()->user_id, "notify_everyone" => '0'])
             );
 
             // Load admin data if user is admin
