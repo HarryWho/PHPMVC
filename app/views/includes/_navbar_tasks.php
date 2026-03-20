@@ -31,7 +31,9 @@
             <!-- end task item -->
           <?php endforeach; ?>
         <?php else: ?>
-          <li>You have no tasks</li>
+          <ul>
+            <li>You have no tasks</li>
+          </ul>
         <?php endif; ?>
       </ul>
     </li>

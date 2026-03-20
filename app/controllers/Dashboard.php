@@ -27,5 +27,4 @@ class Dashboard extends Controller
       exit;
     }
   }
-  public function SetNotification(): void {}
 }

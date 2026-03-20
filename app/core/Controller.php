@@ -42,7 +42,14 @@ class Controller
 
             $notifications = QueryCache::remember(
                 'notifications_' . Auth::user()->user_id,
-                fn() => NavbarLoader::getMessageType('notifications', ['notification_ownerId' => Auth::user()->user_id, "notify_everyone" => '0'])
+                fn() => NavbarLoader::getMessageType(
+                    'notifications',
+                    [
+                        'notification_ownerId' => Auth::user()->user_id,
+                        'notify_everyone' => '0',
+                        'user_last_login' => Auth::user()->user_last_login
+                    ]
+                )
             );
 
             // Load admin data if user is admin

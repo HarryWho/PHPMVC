@@ -62,6 +62,7 @@ class NavbarLoader
                 FROM notifications
                 WHERE notifications.notification_ownerId = :notification_ownerId
                 OR notifications.notification_ownerId = :notify_everyone
+                AND notifications.notification_createdAt > :user_last_login
                 ORDER BY " . $cls->OrderColumn() . " " . $cls->OrderType() . " LIMIT " . $cls->Limit() . " OFFSET " . $cls->Offset();
     }
 

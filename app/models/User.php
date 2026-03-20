@@ -7,7 +7,7 @@ class User
 
 
     protected $table = 'users';
-    protected $order_column = 'user_id';
+    protected $order_column = 'user_joinedAt';
     protected $order_type = 'DESC';
     protected int $limit = 100;
     protected int $offset = 0;

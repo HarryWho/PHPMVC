@@ -6,7 +6,7 @@ defined("ROOTPATH") or exit("Access Denied!");
  * Manages user sessions and role-based access control
  * Implements session fingerprinting and token validation
  */
-class Auth 
+class Auth
 {
     /**
      * Role hierarchy for role-based access control
@@ -118,18 +118,18 @@ class Auth
     public static function atLeast(string $role): bool
     {
         $user = self::user();
-        
+
         // Verify user exists and role is valid
         if (!$user || empty($user->user_role)) {
             return false;
         }
-        
+
         // Check if role exists in hierarchy
         if (!isset(self::$roleHierarchy[$role]) || !isset(self::$roleHierarchy[$user->user_role])) {
             logError("Invalid role in atLeast check", ['role' => $role, 'user_role' => $user->user_role], 'warning');
             return false;
         }
-        
+
         // Compare role levels
         return self::$roleHierarchy[$user->user_role] >= self::$roleHierarchy[$role];
     }
@@ -196,4 +196,12 @@ class Auth
 
         logError("User logged out", [], 'info');
     }
+
+    #region Require User files and return User Object
+    public static function GetRequiredUser(): mixed
+    {
+        require_once '../app/models/User.php';
+        return new User;
+    }
+    #endregion
 }

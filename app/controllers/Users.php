@@ -143,19 +143,21 @@ class Users extends Controller
       $user_email = $_POST['user_email'];
       $user_password = $_POST['user_password'];
 
-      $user = self::GetRequiredUser();
+      $user = Auth::GetRequiredUser();
       $found_user = $user->get_row("SELECT * FROM `users` WHERE `user_email` = ?", [$user_email]);
 
       if ($found_user) {
         if (password_verify($user_password, $found_user->user_password)) {
+          // dont save the password to session
+          unset($found_user->user_password);
           // Login successful - clear rate limiting and regenerate session ID
           clearFailedAttempts();
           Auth::regenerateSessionId();
           $_SESSION['user'] = $found_user;
-          $user = self::GetRequiredUser();
+
           $user->update(Auth::user()->user_id, ['user_last_login' => date("Y-m-d H:i:s")]);
-          // Send Notification
-          NavbarLoader::setMessageType('notifications', ['notification_ownerId' => '30', 'notification_message' => "Test message for Harry Only"]);
+          // Send Notification notification_ownerId = '0' = message sent to everyone
+          NavbarLoader::setMessageType('notifications', ['notification_ownerId' => '0', 'notification_message' => Auth::user()->user_name . " logged in"]);
           // Log successful login
           logError("Successful login", ['email' => $user_email, 'ip' => $_SERVER['REMOTE_ADDR']], 'info');
 
@@ -231,11 +233,5 @@ class Users extends Controller
   }
   #endregion
 
-  #region Require User files and return User Object
-  private static function GetRequiredUser(): mixed
-  {
-    require_once '../app/models/User.php';
-    return new User;
-  }
-  #endregion
+
 }

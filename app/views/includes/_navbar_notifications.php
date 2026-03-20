@@ -24,7 +24,9 @@
             </li>
           <?php endforeach; ?>
         <?php else: ?>
-          <li>You have no notifications</li>
+          <ul>
+            <li>You have no notifications</li>
+          </ul>
         <?php endif; ?>
         <!-- end notification -->
       </ul>

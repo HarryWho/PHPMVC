@@ -30,7 +30,9 @@
           <?php endforeach; ?>
 
         <?php else: ?>
-          <li>You have no messages</li>
+          <ul>
+            <li>You have no messages</li>
+          </ul>
         <?php endif; ?>
       </ul>
       <!-- /.menu -->
