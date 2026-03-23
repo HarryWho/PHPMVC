@@ -13,7 +13,7 @@
                         <?php
                             switch($data['which_form']){
                                 default:
-                                    require_once '../app/views/includes/catagory_form.php';
+                                require_once '../app/views/includes/forms/catagory_form.php';
                                     break;
                             }
                         ?>

@@ -3,7 +3,7 @@ defined("ROOTPATH") or exit("Access Denied!");
 
 class Upload extends Controller
 {
-    public function index()
+    public static function upload(): string
     {
         // Upload directory
         $uploadDir = BASE_URL .'/dist/img/uploads/';
@@ -15,7 +15,7 @@ class Upload extends Controller
 
         // Check if file was uploaded
         if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
-            die("No file uploaded or upload error.");
+            return ("No file uploaded or upload error.");
         }
 
         $file = $_FILES['image'];
@@ -34,13 +34,13 @@ class Upload extends Controller
         finfo_close($finfo);
 
         if (!in_array($mime, $allowedTypes)) {
-            die("Invalid file type.");
+            return "Invalid file type.";
         }
 
         // Limit file size (5MB)
         $maxSize = 5 * 1024 * 1024;
         if ($file['size'] > $maxSize) {
-            die("File too large.");
+            return "File too large.";
         }
 
         // Generate safe random filename
@@ -51,9 +51,9 @@ class Upload extends Controller
         $destination = $uploadDir . $newName;
 
         if (!move_uploaded_file($file['tmp_name'], $destination)) {
-            die("Failed to save file.");
+            return "Failed to save file.";
         }
 
-        echo "Upload successful! Saved as: " . htmlspecialchars($newName);
+        return "Upload successful! Saved as: " . htmlspecialchars($newName);
     }
 }

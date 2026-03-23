@@ -20,16 +20,16 @@
           <?php if (Auth::atLeast('member')): ?>
               
             <!-- Messages: style can be found in dropdown.less-->
-            <?php include '../app/views/includes/_navbar_messages.php'; ?>
+            <?php include '_navbar_messages.php'; ?>
             <!-- /.messages-menu -->
 
             <!-- Notifications Menu -->
-            <?php include '../app/views/includes/_navbar_notifications.php'; ?>
+            <?php include '_navbar_notifications.php'; ?>
             <!-- Tasks Menu -->
-            <?php include '../app/views/includes/_navbar_tasks.php'; ?>
+            <?php include '_navbar_tasks.php'; ?>
           <?php endif; ?>
           <!-- User Account Menu -->
-          <?php include '../app/views/includes/_navbar_user.php'; ?>
+          <?php include '_navbar_user.php'; ?>
 
           <?php if(isLoggedIn()): ?>
           <!-- Control Sidebar Toggle Button -->

@@ -65,9 +65,9 @@ desired effect
 <body class="hold-transition skin-blue sidebar-mini">
   <div class="wrapper">
     <!-- Main Header -->
-    <?php require_once '../app/views/includes/_navbar.php'; ?>
+    <?php require_once 'navbar/_navbar.php'; ?>
     <!-- Left side column. contains the logo and sidebar -->
-    <?php require_once '../app/views/includes/_aside.php'; ?>
+    <?php require_once 'aside/_aside.php'; ?>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
