@@ -13,10 +13,11 @@ class Auth
      * Higher number = higher privilege level
      */
     private static array $roleHierarchy = [
-        'member'    => 1,
-        'author'    => 2,
-        'moderator' => 3,
-        'admin'     => 4
+        'member'        => 1,
+        'author'        => 2,
+        'moderator'     => 3,
+        'admin'         => 4,
+        'super_admin'   => 5
     ];
 
     /**

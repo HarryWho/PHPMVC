@@ -25,8 +25,25 @@ class Admin extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Validate CSRF token first
-            requireCSRFToken();
-            
+            //requireCSRFToken();
+            $user = Auth::GetRequiredUser();
+            $results = $user->first(['user_id' => $id]);
+
+            unset($results->user_password);
+            echo json_encode([
+                "success" => true,
+                "message" => "
+                <div class='user-panel'>
+                    <div class='pull-left image'>
+                        <img src='" . BASE_URL . "/dist/img/" . $results->user_image . "' alt='user_image' class='img-circle'>"
+                    . "</div>
+                    <div class='pull-left info'>
+                        <p>" . $results->user_name . "</p>
+                    </div>
+                </div>",
+                "messageBody" => $results
+            ]);
+            exit;
         }
     }
 }

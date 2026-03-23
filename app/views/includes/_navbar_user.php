@@ -14,7 +14,7 @@
       <p>
         <?= isLoggedIn() ? esc(Auth::user()->user_name) : 'Guest' ?>
         <small><?= isLoggedIn() ? esc(date("M jS Y", strtotime(Auth::user()->user_joinedAt))) : '' ?></small>
-        <small><?= isLoggedIn() ? esc(ucfirst(Auth::user()->user_role)) : '' ?></small>
+        <small><?= isLoggedIn() ? esc(ucwords(str_replace('_', ' ', Auth::user()->user_role))) : '' ?></small>
       </p>
     </li>
     <!-- Menu Body -->

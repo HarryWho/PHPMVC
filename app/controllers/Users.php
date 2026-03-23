@@ -22,7 +22,7 @@ class Users extends Controller
     }
 
 
-    $userModel = self::GetRequiredUser();
+    $userModel = Auth::GetRequiredUser();
 
     $user = $userModel->first(['user_id' => $id]);
 
@@ -79,7 +79,7 @@ class Users extends Controller
 
       // Check for duplicate email (database-level validation)
 
-      $user = self::GetRequiredUser();
+      $user = Auth::GetRequiredUser();
 
       $existing = $user->first(['user_email' => $_POST['user_email']]);
       if ($existing) {
@@ -201,16 +201,17 @@ class Users extends Controller
   #endregion
 
   #region User Update
-  public function update($id = null)
+  public function ajax_update_role($id = null)
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $user = self::GetRequiredUser();
+      $user = Auth::GetRequiredUser();
       $user->update($id, ['user_role' => $_POST['user_role']]);
       echo json_encode([
         "success" => true,
         "message" => "Role updated",
         'messageBody' => "You have successfully updated the User"
       ]);
+      NavbarLoader::setMessageType('notifications', ['notification_ownerId' => $id, 'notification_message' => 'Super Admin has changed your role to: ' . $_POST['user_role']]);
       exit;
     }
   }
@@ -218,10 +219,10 @@ class Users extends Controller
   #endregion
 
   #region User Delete
-  public function delete($id = null)
+  public function ajax_delete($id = null)
   {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $user = self::GetRequiredUser();
+      $user = Auth::GetRequiredUser();
       $user->delete($id);
       echo json_encode([
         "success" => true,

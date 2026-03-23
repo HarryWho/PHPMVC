@@ -32,19 +32,22 @@
                             <?php foreach ($data['users'] as $auser) : ?>
                                 <tr>
                                     <td><?= esc($auser->user_id) ?></td>
-                                    <td><?= esc($auser->user_name) ?></td>
+                                    <td><a href="/admin/ajax_get_user/<?= esc($auser->user_id) ?>" class="show_user" return false><?= esc($auser->user_name) ?></a></td>
                                     <td><?= esc($auser->user_email) ?></td>
-                                    <td><?= format_date($auser->user_joinedAt) ?></td>
+                                    <td><?= format_date(esc($auser->user_joinedAt)) ?></td>
                                     <td>
                                         <select name="roles" class="roles form-control">
                                             <option value="member" <?= esc($auser->user_role) == 'member' ? 'selected' : '' ?>>Member</option>
                                             <option value="author" <?= esc($auser->user_role) == 'author' ? 'selected' : '' ?>>Author</option>
                                             <option value="moderator" <?= esc($auser->user_role) == 'moderator' ? 'selected' : '' ?>>Moderator</option>
                                             <option value="admin" <?= esc($auser->user_role) == 'admin' ? 'selected' : '' ?>>Administrator</option>
+                                            <option value="super_admin" <?= esc($auser->user_role) == 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <a href="/users/delete/<?= $auser->user_id ?>" class='delete-btn btn btn-warning' style='border-radius:50%;' return false><i class="fa fa-trash"></i></a>
+                                        <?php if (Auth::user()->user_role === 'admin' or Auth::user()->user_role === 'super_admin' and $auser->user_id !== Auth::user()->user_id or $auser->user_role !== 'super_user'): ?>
+                                            <a href="/users/ajax_delete/<?= esc($auser->user_id) ?>" class='delete-btn btn btn-warning' style='border-radius:50%;' return false><i class="fa fa-trash"></i></a>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -104,7 +107,16 @@
         const roles = document.querySelectorAll(".roles");
         const deleteBtns = document.querySelectorAll('.delete-btn');
 
+        const users = document.querySelectorAll('.show_user');
 
+        users.forEach(user => {
+            user.addEventListener('click', (e) => {
+                e.preventDefault();
+                doAjaxCall(e.target.href, null, 'user_details');
+
+
+            });
+        })
 
         deleteBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -116,12 +128,9 @@
                 $("#modal-default .modal-title").text("Deleting " + name + "?");
                 $("#modal-default .modal-body").text("Are you sure you want to delete " + name + "?");
                 $("#confirm_delete").prop(
-                    'disabled', false
+                    'disabled', user_id === parseInt(tr.children[0].innerText)
                 );
                 if (user_id === parseInt(tr.children[0].innerText)) {
-                    $("#confirm_delete").prop(
-                        'disabled', true
-                    );
                     $("#modal-default .modal-body").text("You cannot delete yourself")
                     $("#modal-default .modal-title").text("Deleting Yourself?... You cannot do that");
                 }
@@ -129,6 +138,7 @@
                 $('#modal-default').modal('show'); // ✅ Correct
                 $("#confirm_delete").on('click', () => {
                     $('#modal-default').modal('hide');
+
                     if (doAjaxCall(e.target.href)) {
                         // after AJAX success:
                         tr.parentNode.removeChildNode(tr);
@@ -144,18 +154,15 @@
                 let formData = new FormData();
 
                 formData.append("user_role", e.target.value);
-                url = "/users/update/" + parseInt(e.target.parentNode.parentNode.children[0].innerText, 10)
+                url = "/users/ajax_update_role/" + parseInt(e.target.parentNode.parentNode.children[0].innerText, 10)
                 doAjaxCall(url, formData)
-
-
-
             })
         })
 
         function showModal(response, type) {
 
-            $("#modal-dialog .modal-title").text(response.message);
-            $("#modal-dialog .modal-body").text(response.messageBody);
+            $("#modal-dialog .modal-title").html(response.message);
+            $("#modal-dialog .modal-body").html(response.messageBody);
             $("#modal-dialog").addClass(type);
             $('#modal-dialog').modal('show'); // ✅ Correct
         }

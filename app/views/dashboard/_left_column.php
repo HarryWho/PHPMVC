@@ -4,8 +4,15 @@
         <h3 class="box-title">Catagories</h3>
     </div>
     <div class="box-body box-profile">
-        <?php if (!empty($data['catagories'])): ?>
-            <ul class="sidebar-menu" data-widget="tree">
+        <ul class="sidebar-menu" data-widget="tree">
+            <li>
+                <ul class="sidebar-menu">
+                    <?php if (Auth::atLeast('author')): ?>
+                        <li><a href="/create/catagory"><i class="fa  fa-check-square-o"></i> Create a Catagory</a></li>
+                    <?php endif ?>
+                </ul>
+            </li>
+            <?php if (!empty($data['catagories'])): ?>
                 <?php foreach ($data['catagories'] as $catagory): ?>
                     <li>
                         <div class="user-panel">
@@ -18,48 +25,14 @@
                         </div>
                     </li>
                 <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>There are no Catagories Listed</p>
-        <?php endif; ?>
+            <?php else: ?>
+                <li>There are no Catagories Listed</li>
+            <?php endif; ?>
+        </ul>
 
     </div>
     <!-- /.box-body -->
 
 
-</div>
-<!-- /.box -->
-
-<!-- Groups i belong to -->
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">Pages i have Joined </h3>
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body">
-        <?php if (!empty($data['groups-i-am-in'])): ?>
-        <?php else: ?>
-            <!-- TODO -->
-            <p>You do not belong to any groups</p>
-        <?php endif; ?>
-    </div>
-    <!-- /.box-body -->
-</div>
-<!-- /.box -->
-
-<!-- Groups i belong to -->
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">My Pages</h3>
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body">
-        <?php if (!empty($data['my-pages'])): ?>
-        <?php else: ?>
-            <!-- TODO Create One-->
-            <p>You have No pages</p>
-        <?php endif; ?>
-    </div>
-    <!-- /.box-body -->
 </div>
 <!-- /.box -->

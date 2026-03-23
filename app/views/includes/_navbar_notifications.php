@@ -13,13 +13,15 @@
           <?php foreach ($data['notifications'] as $note): ?>
             <li><!-- start notification -->
               <a href="#">
-
+                <!-- The message -->
+                <div style="width:5px;">
+                  <i class="fa fa-users text-aqua"></i>
+                  <?= esc($note->notification_message) ?>
+                </div>
                 <!-- Message title and timestamp -->
                 <div class="pull-right">
                   <small><i class="fa fa-clock-o"></i> <?= timeAgo($note->notification_createdAt) ?></small>
                 </div>
-                <!-- The message -->
-                <p><i class="fa fa-users text-aqua"></i> <?= esc($note->notification_message) ?></p>
               </a>
             </li>
           <?php endforeach; ?>
