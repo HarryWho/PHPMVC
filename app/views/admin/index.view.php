@@ -102,7 +102,7 @@
             <!-- /.modal -->
         </div><!-- ./col -->
     </div><!-- ./row -->
-    <?php include_once '../app/views/includes/_ajax.php' ?>
+    <?php include_once '../app/views/includes/ajax/_ajax.php' ?>
     <script>
         const roles = document.querySelectorAll(".roles");
         const deleteBtns = document.querySelectorAll('.delete-btn');

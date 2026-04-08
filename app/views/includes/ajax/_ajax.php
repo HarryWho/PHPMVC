@@ -1,6 +1,6 @@
 <script>
     async function doAjaxCall(p_url, formData = null, cb = null) {
-
+        
         $.ajax({
             url: p_url,
             type: "POST",
@@ -8,11 +8,11 @@
             processData: false, // required
             contentType: false, // required
             dataType: "json",
-            success: await
-            function(response) {
-                //console.log("Server says:", response);
+            success: function(response) {
+                console.log("Server says:", response);
 
                 if (response.success) {
+                    alert(response)
                     response.messageBody = cb === null ? response.messageBody : GetResponseText(response);
                     showModal(response, 'modal-success');
                     return response.success;
@@ -22,7 +22,9 @@
                 }
             },
             error: function(xhr, status, error) {
+                
                 console.error("AJAX Error:", error);
+                showModal(error, 'error');
             }
         });
     }

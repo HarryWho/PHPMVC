@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Forever • Family</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .hero-bg {
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.85)), url('https://picsum.photos/id/1015/2000/1200') center/cover no-repeat;
+    }
+    .photo-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .photo-hover:hover {
+      transform: scale(1.08) rotate(1deg);
+      box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    }
+    .lightbox {
+      animation: fadeIn 0.3s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 min-h-screen">
+
+  <!-- Hero -->
+  <section class="hero-bg h-screen flex items-center justify-center text-center relative">
+    <div class="max-w-4xl mx-auto px-6">
+      <h1 class="text-7xl md:text-8xl font-bold tracking-tighter mb-4">
+        Our Forever
+      </h1>
+      <p class="text-2xl md:text-3xl text-zinc-400 mb-10">
+        A private place for our family — no matter where we roam
+      </p>
+      <button onclick="document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' })" 
+              class="bg-white text-black px-10 py-5 rounded-full font-semibold text-lg hover:bg-amber-400 transition-all">
+        Enter the Family Gallery →
+      </button>
+    </div>
+    
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+      <i class="fa-solid fa-chevron-down text-4xl"></i>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section id="gallery" class="py-20 px-6 bg-zinc-900">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-5xl font-bold text-center mb-4">Moments That Matter</h2>
+      <p class="text-center text-zinc-400 text-xl mb-16">Captured by us • Shared only with us</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="photo-grid">
+        <!-- Photos will be added by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black py-12 text-center text-zinc-500">
+    <p>Made with love for the family • Protected behind password</p>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-6">
+    <div class="max-w-5xl w-full relative">
+      <button onclick="closeLightbox()" class="absolute -top-12 right-0 text-white text-4xl hover:text-amber-400">
+        &times;
+      </button>
+      <img id="lightbox-img" class="w-full rounded-2xl shadow-2xl" alt="">
+      <p id="lightbox-caption" class="text-center text-xl mt-6 text-zinc-300"></p>
+    </div>
+  </div>
+
+  <script>
+    // Sample family photos (replace these URLs with your real ones later)
+    const photos = [
+      { url: "https://picsum.photos/id/1015/800/600", caption: "Christmas 2025 • The whole crew" },
+      { url: "https://picsum.photos/id/237/800/600", caption: "Billy's first surf • Jan 2026" },
+      { url: "https://picsum.photos/id/201/800/600", caption: "Mum & Dad • 30th Anniversary" },
+      { url: "https://picsum.photos/id/133/800/600", caption: "Sunset at the beach • March 2026" },
+      { url: "https://picsum.photos/id/1016/800/600", caption: "The grandkids being legends" },
+      { url: "https://picsum.photos/id/870/800/600", caption: "Family dinner • Best night ever" }
+    ];
+
+    function createGallery() {
+      const grid = document.getElementById('photo-grid');
+      grid.innerHTML = '';
+
+      photos.forEach(photo => {
+        const div = document.createElement('div');
+        div.className = 'overflow-hidden rounded-3xl cursor-pointer photo-hover';
+        div.innerHTML = `
+          <img src="${photo.url}" class="w-full h-full object-cover" alt="${photo.caption}">
+          <div class="p-6 bg-zinc-800">
+            <p class="text-sm text-amber-400">${photo.caption}</p>
+          </div>
+        `;
+        div.onclick = () => openLightbox(photo.url, photo.caption);
+        grid.appendChild(div);
+      });
+    }
+
+    function openLightbox(url, caption) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox-caption').textContent = caption;
+      document.getElementById('lightbox').classList.remove('hidden');
+      document.getElementById('lightbox').classList.add('flex');
+    }
+
+    function closeLightbox() {
+      const lb = document.getElementById('lightbox');
+      lb.classList.add('hidden');
+      lb.classList.remove('flex');
+    }
+
+    // Initialize
+    createGallery();
+  </script>
+</body>
+</html>

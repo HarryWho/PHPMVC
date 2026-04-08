@@ -27,4 +27,13 @@ class Dashboard extends Controller
       exit;
     }
   }
+
+  public function gallery()
+  {
+    $data = [
+      'title' => 'Dashboard',
+      'description' => 'Welcome to your dashboard.'
+    ];
+    $this->view('gallery/index', $data);
+  }
 }

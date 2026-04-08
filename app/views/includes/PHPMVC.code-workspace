@@ -8,6 +8,6 @@
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "AdminLTE-2.4.18"
-	}
+    "liveServer.settings.multiRootWorkspaceName": "PHPMVC",
+  }
 }

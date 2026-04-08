@@ -37,7 +37,7 @@ loadEnv(__DIR__ . '/../../.env');
 date_default_timezone_set('Australia/Sydney');
 // Define constants from environment variables with fallback defaults
 define('DEBUG', $_ENV['DEBUG'] === 'true');
-define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost');
+define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://calvins.lumen.family');
 define('MIN_VERSION', $_ENV['MIN_VERSION'] ?? '8.0');
 define('HTTPS_ENFORCE', $_ENV['HTTPS_ENFORCE'] === 'true');
 

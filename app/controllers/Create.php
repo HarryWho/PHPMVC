@@ -7,7 +7,11 @@ class Create extends Controller
     {
         if (Auth::isLoggedIn() && Auth::atLeast('author')) {
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
-                dd($_POST);
+                dd($_POST['image']);
+                die;
+                require_once "Upload.php";
+                $file = new Uploads();
+                dd($file->upload());
                 die;
             } else {
                 require_once '../app/core/DashboardLoader.php';
