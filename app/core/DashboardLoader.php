@@ -11,6 +11,9 @@ class DashboardLoader
                         FROM catagories
                         JOIN users ON catagories.catagory_authorId = users.user_id
                        '
+        ],
+        'rooms' => [
+            'include'
         ]
     ];
 

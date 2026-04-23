@@ -5,7 +5,7 @@ class Create extends Controller
 {
     public function catagory()
     {
-        if (Auth::isLoggedIn() && Auth::atLeast('author')) {
+        if (Auth::isLoggedIn() && Auth::atLeast('admin')) {
             if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 dd($_POST['image']);
                 die;
@@ -31,8 +31,20 @@ class Create extends Controller
                 exit;
             }
         } else {
-            Flash::set('error', 'You do not have permission to view that page! Please login');
-            redirect('/users/login');
+            Flash::set('error', 'You do not have permission to view that page!');
+            redirect('/dashboard');
+            exit;
+        }
+    }
+
+    public function room($params = [])
+    {
+        if (Auth::isLoggedIn() && Auth::atLeast('admin')) {
+            if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            }
+        } else {
+            Flash::set('error', 'You do not have permission to view that page!');
+            redirect('/dashboard');
             exit;
         }
     }

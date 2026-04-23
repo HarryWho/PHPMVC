@@ -1,13 +1,13 @@
 {
-	"folders": [
-		{
-			"path": "../../.."
-		},
-		{
-			"path": "../../../../../../../media/calvin/NewDrive/AdminLTE-2.4.18"
-		}
-	],
-	"settings": {
-    "liveServer.settings.multiRootWorkspaceName": "PHPMVC",
-  }
+  "folders": [
+    {
+      "path": "../../..",
+    },
+    {
+      "path": "../../../../../../../media/calvin/NewDrive/Templates/AdminLTE-2.4.18",
+    },
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "AdminLTE-2.4.18",
+  },
 }

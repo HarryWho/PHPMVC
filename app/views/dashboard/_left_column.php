@@ -7,7 +7,7 @@
         <ul class="sidebar-menu" data-widget="tree">
             <li>
                 <ul class="sidebar-menu">
-                    <?php if (Auth::atLeast('author')): ?>
+                    <?php if (Auth::atLeast('admin')): ?>
                         <li><a href="/create/catagory"><i class="fa  fa-check-square-o"></i> Create a Catagory</a></li>
                     <?php endif ?>
                 </ul>
